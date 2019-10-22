@@ -14,3 +14,12 @@ jobs:
         docker run \
         -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
         jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
+
+    - name: Download azcopy
+      run: "wget -O ../azcopy.tar.gz https://aka.ms/downloadazcopy-v10-linux"
+
+    - name: extract azcopy
+      run: tar -xf ../azcopy.tar.gz -C ../
+ 
+    - name: copy file
+      run: "../azcopy_*/azcopy cp \"${{github.workspace}}/_site/*\" \"https://hyungstorage.blob.core.windows.net/%24web/${{secrets.sas_key}}\" --recursive=true --overwrite=true"
